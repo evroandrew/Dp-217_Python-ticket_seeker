@@ -8,9 +8,15 @@ def get_bus_tickets(departure, arrival, date) -> requests.Response:
         'departureCode': departure,
         'arrivalCode': arrival,
         'departureDate': date,
-        'language': 'uk'
+        'language': 'uk',
+        'supplier': 'ubus_busfor',
+        'transactionId': '02323r23r23r2',
     }
-    headers = {'Content-Type': 'application/json'}
+    headers = {
+        'content-type': 'application/json',
+        'language': 'uk',
+        'transactionid': '02323r23r23r2'
+    }
     tickets = requests.request("POST",
                                url,
                                headers=headers,

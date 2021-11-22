@@ -19,7 +19,7 @@ def get_tickets():
         tickets = services.get_bus_tickets(departure, arrival, date).json()
     else:
         return Response('Unknown tickets type', status=400)
-
+    
     return json.dumps(tickets)
 
 
