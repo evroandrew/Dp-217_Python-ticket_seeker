@@ -4,7 +4,7 @@ from app import app
 from . import services
 
 
-@app.route('/search', methods=['POST'])
+@app.route('/tickets', methods=['POST'])
 def get_tickets():
     request_data = request.get_json(force=True)
 
@@ -19,13 +19,22 @@ def get_tickets():
         tickets = services.get_bus_tickets(departure, arrival, date).json()
     else:
         return Response('Unknown tickets type', status=400)
-    
+
     return json.dumps(tickets)
 
 
 @app.route('/stations')
 def get_stations():
-    pass
+    request_data = request.get_json(force=True)
 
+    station_type = request_data['type']
+    search_string = request_data['search_string']
+
+    stations = services.get_stations(search_string, station_type).json()
+
+    if not stations:
+        return Response(status=400)
+
+    return json.dumps(stations)
 
 

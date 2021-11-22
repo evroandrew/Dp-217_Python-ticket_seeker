@@ -46,9 +46,28 @@ def get_train_tickets(departure, arrival, date) -> requests.Response:
     return tickets
 
 
-def get_train_stations():
-    pass
+def get_stations(search_string, station_type):
+    if station_type == 'train':
+        url = "https://de-prod-lb.cashalot.in.ua/rest/stations/express"
+        supplier = "uz_train"
+    elif station_type == 'bus':
+        url = "https://de-prod-lb.cashalot.in.ua/rest/stations/bus",
+        supplier = "ubus_busfor"
+    else:
+        return
 
-
-def get_bus_stations():
-    pass
+    payload = {
+        'language': 'uk',
+        'supplier': supplier,
+        'query': search_string
+    }
+    headers = {
+        'language': 'uk',
+        'supplier': supplier,
+        'content-type': 'application/json'
+    }
+    tickets = requests.request("POST",
+                               url,
+                               headers=headers,
+                               data=json.dumps(payload))
+    return tickets
