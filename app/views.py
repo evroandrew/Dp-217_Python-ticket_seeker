@@ -2,11 +2,15 @@ import json
 from flask import request, Response
 from app import app
 from . import services
+from .schemas import TicketSchema
 
 
 @app.route('/tickets', methods=['POST'])
 def get_tickets():
     request_data = request.get_json(force=True)
+    validation_err = TicketSchema().validate(request_data)
+    if validation_err:
+        return Response(validation_err, status=400)
 
     departure = request_data['departure_id']
     arrival = request_data['arrival_id']
