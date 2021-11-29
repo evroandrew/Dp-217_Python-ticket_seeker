@@ -3,7 +3,7 @@ import requests
 
 
 def get_bus_tickets(departure, arrival, date) -> requests.Response:
-    url = "https://de-prod-lb.cashalot.in.ua/rest/search/ubus"
+    url = 'https://de-prod-lb.cashalot.in.ua/rest/search/ubus'
     payload = {
         'departureCode': departure,
         'arrivalCode': arrival,
@@ -25,7 +25,7 @@ def get_bus_tickets(departure, arrival, date) -> requests.Response:
 
 
 def get_train_tickets(departure, arrival, date) -> requests.Response:
-    url = "https://de-prod-lb.cashalot.in.ua/rest/supplier/search"
+    url = 'https://de-prod-lb.cashalot.in.ua/rest/supplier/search'
     payload = {
         'departureCode': departure,
         'arrivalCode': arrival,
@@ -48,11 +48,11 @@ def get_train_tickets(departure, arrival, date) -> requests.Response:
 
 def get_stations(search_string, station_type):
     if station_type == 'train':
-        url = "https://de-prod-lb.cashalot.in.ua/rest/stations/express"
-        supplier = "uz_train"
+        url = 'https://de-prod-lb.cashalot.in.ua/rest/stations/express'
+        supplier = 'uz_train'
     elif station_type == 'bus':
-        url = "https://de-prod-lb.cashalot.in.ua/rest/stations/bus",
-        supplier = "ubus_busfor"
+        url = 'https://de-prod-lb.cashalot.in.ua/rest/stations/bus'
+        supplier = 'ubus_busfor'
     else:
         return
 
@@ -66,8 +66,8 @@ def get_stations(search_string, station_type):
         'supplier': supplier,
         'content-type': 'application/json'
     }
-    tickets = requests.request("POST",
-                               url,
-                               headers=headers,
-                               data=json.dumps(payload))
-    return tickets
+    stations = requests.request("POST",
+                                url,
+                                headers=headers,
+                                data=json.dumps(payload))
+    return stations

@@ -27,7 +27,7 @@ def get_tickets():
     return json.dumps(tickets)
 
 
-@app.route('/stations')
+@app.route('/stations', methods=['POST'])
 def get_stations():
     request_data = request.get_json(force=True)
 
