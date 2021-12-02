@@ -1,8 +1,9 @@
 import json
+import redis
 from flask import request, Response
 from app import app
 from . import services
-from .schemas import TicketSchema
+from .schemas import TicketSchema, StationSchema
 
 
 @app.route('/tickets', methods=['POST'])
@@ -11,6 +12,14 @@ def get_tickets():
     validation_err = TicketSchema().validate(request_data)
     if validation_err:
         return Response(validation_err, status=400)
+
+    deserialized = TicketSchema().load(request_data)
+    serialized = TicketSchema().dumps(deserialized)
+
+    store = redis.Redis(host='localhost', port=6379)
+
+    if store.exists(serialized):
+        return store.get(serialized)
 
     departure = request_data['departure_id']
     arrival = request_data['arrival_id']
@@ -24,12 +33,23 @@ def get_tickets():
     else:
         return Response('Unknown tickets type', status=400)
 
-    return json.dumps(tickets)
+    tickets_json = json.dumps(tickets)
+    store.setex(serialized, 30, tickets_json)
+
+    return tickets_json
 
 
 @app.route('/stations', methods=['POST'])
 def get_stations():
     request_data = request.get_json(force=True)
+
+    store = redis.Redis(host='localhost', port=6379)
+
+    deserialized = StationSchema().load(request_data)
+    serialized = StationSchema().dumps(deserialized)
+
+    if store.exists(serialized):
+        return store.get(serialized)
 
     station_type = request_data['type']
     search_string = request_data['search_string']
@@ -38,6 +58,9 @@ def get_stations():
 
     if not stations:
         return Response(status=400)
+
+    stations_json = json.dumps(stations)
+    store.setex(serialized, 300, stations_json)
 
     return json.dumps(stations)
 
