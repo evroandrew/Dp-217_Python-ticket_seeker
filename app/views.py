@@ -1,5 +1,6 @@
 import json
 import redis
+import os
 from flask import request, Response
 from app import app
 from . import services
@@ -16,7 +17,7 @@ def get_tickets():
     deserialized = TicketSchema().load(request_data)
     serialized = TicketSchema().dumps(deserialized)
 
-    store = redis.Redis(host='localhost', port=6379)
+    store = redis.Redis(os.environ.get('REDIS_URL'))
 
     if store.exists(serialized):
         return store.get(serialized)
@@ -43,7 +44,7 @@ def get_tickets():
 def get_stations():
     request_data = request.get_json(force=True)
 
-    store = redis.Redis(host='localhost', port=6379)
+    store = redis.Redis(os.environ.get('REDIS_URL'))
 
     deserialized = StationSchema().load(request_data)
     serialized = StationSchema().dumps(deserialized)
