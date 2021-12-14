@@ -17,7 +17,7 @@ def get_tickets():
     deserialized = TicketSchema().load(request_data)
     serialized = TicketSchema().dumps(deserialized)
 
-    store = redis.Redis(os.environ.get('REDIS_URL'))
+    store = redis.from_url(os.environ.get('REDIS_URL'))
 
     if store.exists(serialized):
         return store.get(serialized)
@@ -44,7 +44,7 @@ def get_tickets():
 def get_stations():
     request_data = request.get_json(force=True)
 
-    store = redis.Redis(os.environ.get('REDIS_URL'))
+    store = redis.from_url(os.environ.get('REDIS_URL'))
 
     deserialized = StationSchema().load(request_data)
     serialized = StationSchema().dumps(deserialized)
@@ -68,6 +68,6 @@ def get_stations():
 
 @app.route('/')
 def hello_world():
-    store = redis.Redis(os.environ.get('REDIS_URL'))
+    store = redis.from_url(os.environ.get('REDIS_URL'))
     print(store)
     return str(store)
