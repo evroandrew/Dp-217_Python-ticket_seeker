@@ -68,4 +68,6 @@ def get_stations():
 
 @app.route('/')
 def hello_world():
+    store = redis.Redis(os.environ.get('REDIS_URL'))
+    print(store)
     return 'Hello World!'
