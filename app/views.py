@@ -66,3 +66,6 @@ def get_stations():
     return json.dumps(stations)
 
 
+@app.route('/')
+def hello_world():
+    return 'Hello World!'
